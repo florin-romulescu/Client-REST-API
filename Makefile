@@ -2,7 +2,7 @@ CC=g++
 FLAGS=-std=c++11 -Wall -Wextra -pedantic -g
 
 SOURCE=src/main.cpp
-LIB=src/lib/*.cpp src/lib/Commands/*.cpp
+LIB=src/lib/*.cpp src/lib/Commands/*.cpp src/lib/*.c
 OUTPUT=main
 
 all:
