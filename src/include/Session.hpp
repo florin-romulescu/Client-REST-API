@@ -19,6 +19,7 @@ class Session {
         std::string sessionToken;
         std::string username;
         std::string password;
+        int sockdfd;
         Session();
     public:
         ~Session();
@@ -33,6 +34,8 @@ class Session {
         void setUsername(std::string username);
         void setPassword(std::string password);
         void setCookie(std::string cookie);
+        void setSocketFd(int sockdfd);
+        int getSocketFd();
 };
 
 #endif // SESSION_HPP

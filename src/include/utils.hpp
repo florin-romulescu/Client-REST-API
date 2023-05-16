@@ -23,17 +23,25 @@ std::ofstream fout("log.txt", std::ios_base::app); \
 fout << message << std::endl; \
 fout.close();
 
-
 #define DIE(condition, message) \
 if (condition) { \
     std::cerr << message << std::endl; \
     exit(EXIT_FAILURE); \
 }
+
 namespace utils {
+    enum RUN_MODE {
+        CONTINUE,
+        STOP
+    };
+
     int connect(std::string ip, int port, int ip_type, int socket_type, int flag);
     void disconnect(int socket_fd);
     int send(int socket_fd, std::shared_ptr<std::string> message);
-    std::shared_ptr<std::string> receive(int socket_fd);
+    std::string receive(int socket_fd);
+    int getErrorCode(std::string response);
+    std::string getSetCookie(std::string response);
+    std::string getBody(std::string response);
 } // namespace utils
 
 #endif // UTILS_HPP

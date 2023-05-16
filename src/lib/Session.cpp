@@ -56,4 +56,12 @@ void Session::setCookie(std::string cookie) {
     this->sessionCookie = cookie;
 }
 
+void Session::setSocketFd(int sockdfd) {
+    this->sockdfd = sockdfd;
+}
+
+int Session::getSocketFd() {
+    return this->sockdfd;
+}
+
 // Path: src/lib/CommandFactory.cpp

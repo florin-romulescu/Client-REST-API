@@ -21,11 +21,29 @@ int utils::send(int socket_fd, std::shared_ptr<std::string> message) {
     return 0;
 }
 
-std::shared_ptr<std::string> utils::receive(int socket_fd) {
+std::string utils::receive(int socket_fd) {
     char* response = receive_from_server(socket_fd);
-    std::shared_ptr<std::string> responsep(new std::string(response));
+    std::string responsep(response);
     delete response;
     return responsep;
+}
+
+int utils::getErrorCode(std::string response) {
+    int size = std::string("HTTP/1.1 ").length();
+    std::string code = response.substr(size, 3);
+    return std::stoi(code);
+}
+
+std::string utils::getSetCookie(std::string response) {
+    int size = std::string("Set-Cookie: ").length();
+    std::string cookie = response.substr(response.find("Set-Cookie: ") + size);
+    cookie = cookie.substr(0, cookie.find("\r\n"));
+    return cookie;
+}
+
+std::string utils::getBody(std::string response) {
+    std::string jwt = response.substr(response.find("\r\n\r\n") + 4);
+    return jwt;
 }
 
 // Path: src/lib/HTTPParser.cpp

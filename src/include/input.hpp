@@ -3,6 +3,8 @@
 
 #include <string>
 #include <memory>
+#include "utils.hpp"
+#include "Command.hpp"
 
 struct Book {
     std::string title;
@@ -10,6 +12,7 @@ struct Book {
     std::string genre;
     std::string publisher;
     std::string year;
+    int page_count;
 };
 
 /*
@@ -34,7 +37,7 @@ class Input {
         * and parsing it into a proper command that will be executed.
         * The command is build using the CommandFactory class. 
         */
-        static void mainLoop();
+        static COMMAND_TYPE mainLoop();
 
         // Setters
         Input* setCommand(std::string command);

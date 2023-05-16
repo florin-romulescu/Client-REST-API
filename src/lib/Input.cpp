@@ -1,6 +1,9 @@
 #include "../include/input.hpp"
 #include "../include/Command.hpp"
+#include "../include/utils.hpp"
+#include "../include/Session.hpp"
 #include <iostream>
+#include <fstream>
 
 Input::Input() {
     command = "";
@@ -73,13 +76,14 @@ int Input::getBookId() {
     return this->bookId;
 }
 
-void Input::mainLoop() {
-    while (true) {    
+COMMAND_TYPE Input::mainLoop() {
+    // while (true) {    
         std::string command;
         std::cin >> command;
         std::shared_ptr<Input> input(new Input());
         std::unique_ptr<CommandFactory> cmdFactory(new CommandFactory());
         Command *cmd;
+        COMMAND_TYPE cmdType;
 
         input->setCommand(command);
         if (command == "login") {
@@ -90,6 +94,7 @@ void Input::mainLoop() {
             input->setUsername(username)
                  ->setPassword(password);
             cmd = cmdFactory->build(COMMAND_TYPE::LOGIN);
+            cmdType = COMMAND_TYPE::LOGIN;
         } else if (command == "register") {
             std::string username;
             std::string password;
@@ -98,16 +103,20 @@ void Input::mainLoop() {
             input->setUsername(username)
                  ->setPassword(password);
             cmd = cmdFactory->build(COMMAND_TYPE::REGISTER);
+            cmdType = COMMAND_TYPE::REGISTER;
         } else if (command == "enter_library") {
             cmd = cmdFactory->build(COMMAND_TYPE::ENTER_LIBRARY);
+            cmdType = COMMAND_TYPE::ENTER_LIBRARY;
         } else if (command == "get_books") {
             cmd = cmdFactory->build(COMMAND_TYPE::GET_BOOKS);
+            cmdType = COMMAND_TYPE::GET_BOOKS;
         } else if (command == "get_book") {
             int id;
             std::cout << "id=";
             std::cin >> id;
             input->setBookId(id);
             cmd = cmdFactory->build(COMMAND_TYPE::GET_BOOK);
+            cmdType = COMMAND_TYPE::GET_BOOK;
         } else if (command == "add_book") {
             std::string title;
             std::string author;
@@ -127,21 +136,28 @@ void Input::mainLoop() {
             book.year = year;
             input->setBook(book);
             cmd = cmdFactory->build(COMMAND_TYPE::ADD_BOOK);
+            cmdType = COMMAND_TYPE::ADD_BOOK;
         } else if (command == "delete_book") {
             int id;
             std::cout << "id="; std::cin >> id;
             input->setBookId(id);
             cmd = cmdFactory->build(COMMAND_TYPE::DELETE_BOOK);
+            cmdType = COMMAND_TYPE::DELETE_BOOK;
         } else if (command == "logout") {
             cmd = cmdFactory->build(COMMAND_TYPE::LOGOUT);
+            cmdType = COMMAND_TYPE::LOGOUT;
         } else if (command == "help") {
             cmd = cmdFactory->build(COMMAND_TYPE::HELP);
+            cmdType = COMMAND_TYPE::HELP;
         } else if (command == "exit") {
-            break;
+            return COMMAND_TYPE::EXIT;
         } else {
             cmd = cmdFactory->build(COMMAND_TYPE::INVALID);
+            cmdType = COMMAND_TYPE::INVALID;
         }
         cmd->execute(input);
+        
         delete cmd;
-    }
+        return cmdType;
+    // }
 }

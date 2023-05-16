@@ -113,6 +113,7 @@ std::shared_ptr<std::string> HTTPParser::toString() {
         output->append("Content-Length: ");
         output->append(std::to_string(this->payload.dump().length()));
         HTTPParser::append_newline(output);
+        HTTPParser::append_newline(output);
         output->append(this->payload.dump());
     } else if (method == "GET") {
         output->append("Content-Length: 0");
