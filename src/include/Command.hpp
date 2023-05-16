@@ -4,6 +4,8 @@
 #include <iostream>
 #include <memory>
 #include "input.hpp"
+#include "HTTPParser.hpp"
+#include "utils.hpp"
 
 enum COMMAND_TYPE {
             LOGIN = 0,
@@ -23,6 +25,7 @@ class Command {
     public:
     virtual void execute(std::shared_ptr<Input> input) = 0;
     virtual ~Command() = default;
+    std::shared_ptr<http::HTTPParser> parser;
 };
 
 class LoginCommand : public Command {
