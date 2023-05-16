@@ -25,11 +25,19 @@ void LoginCommand::execute(std::shared_ptr<Input> input) {
     utils::send(Session::session->getSocketFd(), parser->toString());
 }
 
-void respond(std::string response) {
+void LoginCommand::respond(std::string response) {
     int statusCode = utils::getErrorCode(response);
     if (statusCode == 200) {
         std::string cookie = utils::getSetCookie(response);
+        cookie = cookie.substr(0, cookie.find(";"));
         Session::session->setCookie(cookie);
+        Session::session->setUsername(this->username);
+        Session::session->setPassword(this->password);
+        #ifdef DEBUG
+        {std::cout << "Cookie: " << cookie << std::endl;}
+        #endif
+    } else if (statusCode == 204) {
+        std::cerr << "Already logged in" << std::endl;
     } else {
         std::string body = utils::getBody(response);
         nlohmann::json jsonBody = nlohmann::json::parse(body);

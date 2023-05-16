@@ -3,6 +3,7 @@
 #include "include/HTTPParser.hpp"
 #include "include/utils.hpp"
 #include "include/Session.hpp"
+#include "include/Command.hpp"
 #include <iostream>
 #include <fstream>
 #include <sys/socket.h>
@@ -16,17 +17,17 @@
 
 using json = nlohmann::json;
 
-int main(int argc, char* argv[]) {
+int main() {
     #ifdef DEBUG
     std::ofstream fout("log.txt");
     fout << std::endl;
     fout.close();
     #endif
 
-    sockaddr_in server;
-    server.sin_family = AF_INET;
-    server.sin_port = htons(SERVER_PORT);
-    server.sin_addr.s_addr = inet_addr(SERVER_IP);
+    // sockaddr_in server;
+    // server.sin_family = AF_INET;
+    // server.sin_port = htons(SERVER_PORT);
+    // server.sin_addr.s_addr = inet_addr(SERVER_IP);
 
     int sockdfd = utils::connect(SERVER_IP, SERVER_PORT, AF_INET, SOCK_STREAM, 0);
 
@@ -47,14 +48,14 @@ int main(int argc, char* argv[]) {
         .revents = 0
     });
 
-    COMMAND_TYPE mode;
+    COMMAND_TYPE mode = COMMAND_TYPE::LOGIN; // not important
 
     Session* session = Session::start();
     session->setSocketFd(sockdfd);
 
     do {
         poll(pollfds.data(), pollfds.size(), -1);
-        for (int i = 0; i < pollfds.size(); i++) {
+        for (int i = 0; i < (int)pollfds.size(); i++) {
             if (pollfds[i].revents & POLLIN) {
                 if (pollfds[i].fd == 0) {
                     mode = Input::mainLoop();
@@ -73,10 +74,10 @@ int main(int argc, char* argv[]) {
                         #endif
                         continue;
                     }
-
-                    #ifdef DEBUG
-                    std::cout << "Received response from server" << std::endl;
-                    #endif
+                    CommandFactory cmdFactory;
+                    Command* cmd = cmdFactory.build(mode);
+                    cmd->respond(response);
+                    delete cmd;
                 }
             }
         }

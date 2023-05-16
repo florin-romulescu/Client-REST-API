@@ -12,4 +12,26 @@ void LogoutCommand::execute(std::shared_ptr<Input> input) {
     #ifdef DEBUG
     PRINT("LogoutCommand::executed");
     #endif
+
+    utils::send(Session::session->getSocketFd(), parser->toString());
+}
+
+void LogoutCommand::respond(std::string response) {
+    int statusCode = utils::getErrorCode(response);
+    if (statusCode == 200) {
+        Session::session->setCookie("");
+        Session::session->setUsername("");
+        Session::session->setPassword("");
+        Session::session->setSessionToken("");
+    } else {
+        std::string body = utils::getBody(response);
+        nlohmann::json jsonBody = nlohmann::json::parse(body);
+        std::string message = jsonBody["error"];
+        std::cerr << message << std::endl;
+    }
+
+    #ifdef DEBUG
+    {PRINT("LogoutCommand::response");}
+    {PRINT(response.c_str());}
+    #endif
 }

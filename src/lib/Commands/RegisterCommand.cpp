@@ -18,11 +18,11 @@ void RegisterCommand::execute(std::shared_ptr<Input> input) {
     {PRINT("RegisterCommand::executed");}
     {PRINT(parser->toString()->c_str());}
     #endif
-
-    std::cout << "TEST" << std::endl;
     utils::send(Session::session->getSocketFd(), parser->toString());
-    std::cout << "TEST" << std::endl;
-    std::string response = utils::receive(Session::session->getSocketFd());
+    
+}
+
+void RegisterCommand::respond(std::string response) {
     std::cout << "TEST" << std::endl;
     #ifdef DEBUG
     {PRINT("RegisterCommand::response");}

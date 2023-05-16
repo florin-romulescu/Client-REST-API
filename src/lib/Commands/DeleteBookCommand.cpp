@@ -14,3 +14,7 @@ void DeleteBookCommand::execute(std::shared_ptr<Input> input) {
     PRINT("DeleteBookCommand::executed");
     #endif
 }
+
+void DeleteBookCommand::respond(std::string response) {
+    (void) response;
+}

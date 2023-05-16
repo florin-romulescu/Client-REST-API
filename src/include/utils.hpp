@@ -29,6 +29,20 @@ if (condition) { \
     exit(EXIT_FAILURE); \
 }
 
+enum COMMAND_TYPE {
+            LOGIN = 0,
+            REGISTER = 1,
+            ENTER_LIBRARY = 2,
+            GET_BOOKS = 3,
+            GET_BOOK = 4,
+            ADD_BOOK = 5,
+            DELETE_BOOK = 6,
+            LOGOUT = 7,
+            EXIT = 8,
+            HELP = 9,
+            INVALID = 10
+        };
+
 namespace utils {
     enum RUN_MODE {
         CONTINUE,

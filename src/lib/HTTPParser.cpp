@@ -94,11 +94,15 @@ std::shared_ptr<std::string> HTTPParser::toString() {
     HTTPParser::append_newline(output);
     output->append("Host: ");
     output->append(SERVER_IP);
+    output->append(":");
+    output->append(std::to_string(SERVER_PORT));
     HTTPParser::append_newline(output);
 
-    output->append("Content-Type: ");
-    output->append(this->payload_type);
-    HTTPParser::append_newline(output);
+    if (this->payload_type != "") {
+        output->append("Content-Type: ");
+        output->append(this->payload_type);
+        HTTPParser::append_newline(output);
+    }
 
     output->append("Connection: keep-alive");
     HTTPParser::append_newline(output);
@@ -109,6 +113,12 @@ std::shared_ptr<std::string> HTTPParser::toString() {
         HTTPParser::append_newline(output);
     }
 
+    if (this->getSessionToken() != "") {
+        output->append("Authorization: Bearer ");
+        output->append(this->getSessionToken());
+        HTTPParser::append_newline(output);
+    }
+
     if (method == "POST") {
         output->append("Content-Length: ");
         output->append(std::to_string(this->payload.dump().length()));
@@ -116,7 +126,7 @@ std::shared_ptr<std::string> HTTPParser::toString() {
         HTTPParser::append_newline(output);
         output->append(this->payload.dump());
     } else if (method == "GET") {
-        output->append("Content-Length: 0");
+        // output->append("Content-Length: 0");
         HTTPParser::append_newline(output);
     }
 

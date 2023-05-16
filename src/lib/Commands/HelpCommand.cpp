@@ -14,3 +14,7 @@ void HelpCommand::execute(std::shared_ptr<Input> input) {
     std::cout << "9.help" << std::endl;
     std::cout << "10.exit" << std::endl;
 }
+
+void HelpCommand::respond(std::string response) {
+    (void) response;
+}

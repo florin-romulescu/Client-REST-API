@@ -19,6 +19,27 @@ void AddBookCommand::execute(std::shared_ptr<Input> input) {
     )"));
 
     #ifdef DEBUG
-    PRINT("AddBookCommand::executed");
+    {PRINT("AddBookCommand::executed");}
+    #endif
+
+    utils::send(Session::session->getSocketFd(), parser->toString());
+}
+
+void AddBookCommand::respond(std::string response) {
+    int statusCode = utils::getErrorCode(response);
+    if (statusCode == 201) {
+        std::string body = utils::getBody(response);
+        nlohmann::json jsonBody = nlohmann::json::parse(body);
+        std::cout << jsonBody.dump(4) << std::endl;
+    } else {
+        std::string body = utils::getBody(response);
+        nlohmann::json jsonBody = nlohmann::json::parse(body);
+        std::string message = jsonBody["error"];
+        std::cerr << message << std::endl;
+    }
+
+    #ifdef DEBUG
+    {PRINT("AddBookCommand::response");}
+    {PRINT(response.c_str());}
     #endif
 }

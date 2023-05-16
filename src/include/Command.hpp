@@ -7,24 +7,10 @@
 #include "HTTPParser.hpp"
 #include "utils.hpp"
 
-enum COMMAND_TYPE {
-            LOGIN = 0,
-            REGISTER = 1,
-            ENTER_LIBRARY = 2,
-            GET_BOOKS = 3,
-            GET_BOOK = 4,
-            ADD_BOOK = 5,
-            DELETE_BOOK = 6,
-            LOGOUT = 7,
-            EXIT = 8,
-            HELP = 9,
-            INVALID = 10
-        };
-
 class Command {
     public:
     virtual void execute(std::shared_ptr<Input> input) = 0;
-    virtual void respond(std::shared_ptr<Input> input) = 0;
+    virtual void respond(std::string response) = 0;
     virtual ~Command() = default;
     std::shared_ptr<http::HTTPParser> parser;
 };
@@ -35,8 +21,7 @@ class LoginCommand : public Command {
     std::string password;
     public:
     void execute(std::shared_ptr<Input> input) override;
-    virtual void respond(std::shared_ptr<Input> input) override;
-    virtual void respond(std::shared_ptr<Input> input) override;
+    void respond(std::string response) override;
     LoginCommand() = default;
     std::string getUsername();
     std::string getPassword();
@@ -48,7 +33,7 @@ class RegisterCommand : public Command {
     std::string password;
     public:
     void execute(std::shared_ptr<Input> input) override;
-    virtual void respond(std::shared_ptr<Input> input) override;
+    void respond(std::string response) override;
     RegisterCommand() = default;
     std::string getUsername();
     std::string getPassword();
@@ -57,57 +42,57 @@ class RegisterCommand : public Command {
 class EnterLibraryCommand : public Command {
     public:
     void execute(std::shared_ptr<Input> input) override;
-    virtual void respond(std::shared_ptr<Input> input) override;
+    void respond(std::string response) override;
 };
 
 class GetBooksCommand : public Command {
     public:
     void execute(std::shared_ptr<Input> input) override;
-    virtual void respond(std::shared_ptr<Input> input) override;
+    void respond(std::string response) override;
 };
 
 class GetBookCommand : public Command {
     public:
     std::string id;
     void execute(std::shared_ptr<Input> input) override;
-    virtual void respond(std::shared_ptr<Input> input) override;
+    void respond(std::string response) override;
 };
 
 class AddBookCommand : public Command {
     public:
     void execute(std::shared_ptr<Input> input) override;
-    virtual void respond(std::shared_ptr<Input> input) override;
+    void respond(std::string response) override;
 };
 
 class DeleteBookCommand : public Command {
     public:
     std::string id;
     void execute(std::shared_ptr<Input> input) override;
-    virtual void respond(std::shared_ptr<Input> input) override;
+    void respond(std::string response) override;
 };
 
 class LogoutCommand : public Command {
     public:
     void execute(std::shared_ptr<Input> input) override;
-    virtual void respond(std::shared_ptr<Input> input) override;
+    void respond(std::string response) override;
 };
 
 class ExitCommand : public Command {
     public:
     void execute(std::shared_ptr<Input> input) override;
-    virtual void respond(std::shared_ptr<Input> input) override;
+    void respond(std::string response) override;
 };
 
 class HelpCommand : public Command {
     public:
     void execute(std::shared_ptr<Input> input) override;
-    virtual void respond(std::shared_ptr<Input> input) override;
+    void respond(std::string response) override;
 };
 
 class InvalidCommand : public Command {
     public:
     void execute(std::shared_ptr<Input> input) override;
-    virtual void respond(std::shared_ptr<Input> input) override;
+    void respond(std::string response) override;
 };
 
 class CommandFactory {
