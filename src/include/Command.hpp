@@ -62,6 +62,7 @@ class GetBooksCommand : public Command {
 
 class GetBookCommand : public Command {
     public:
+    std::string id;
     void execute(std::shared_ptr<Input> input) override;
 };
 
@@ -72,6 +73,7 @@ class AddBookCommand : public Command {
 
 class DeleteBookCommand : public Command {
     public:
+    std::string id;
     void execute(std::shared_ptr<Input> input) override;
 };
 
