@@ -8,6 +8,7 @@
 #include <arpa/inet.h>
 #include <string>
 #include <memory>
+#include <fstream>
 #include <string.h>
 #include "helpers/buffer.h"
 #include "helpers/helpers.h"
@@ -16,6 +17,12 @@
 #define SERVER_PORT 8080
 
 #define DEBUG
+
+#define PRINT(message) \
+std::ofstream fout("log.txt", std::ios_base::app); \
+fout << message << std::endl; \
+fout.close();
+
 
 #define DIE(condition, message) \
 if (condition) { \
