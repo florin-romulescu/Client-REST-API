@@ -48,4 +48,12 @@ void Session::setPassword(std::string password) {
     this->password = password;
 }
 
+std::string Session::getCookie() {
+    return this->sessionCookie;
+}
+
+void Session::setCookie(std::string cookie) {
+    this->sessionCookie = cookie;
+}
+
 // Path: src/lib/CommandFactory.cpp

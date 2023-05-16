@@ -15,6 +15,7 @@
 */
 class Session {
     private:
+        std::string sessionCookie;
         std::string sessionToken;
         std::string username;
         std::string password;
@@ -25,11 +26,13 @@ class Session {
         static Session* start();
         static void end();
         std::string getSessionToken();
+        std::string getCookie();
         std::string getUsername();
         std::string getPassword();
         void setSessionToken(std::string sessionToken);
         void setUsername(std::string username);
         void setPassword(std::string password);
+        void setCookie(std::string cookie);
 };
 
 #endif // SESSION_HPP
