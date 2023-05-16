@@ -8,17 +8,18 @@ void AddBookCommand::execute(std::shared_ptr<Input> input) {
     parser->setPayloadType("application/json");
     parser->setCookie(Session::session->getCookie());
     parser->setSessionToken(Session::session->getSessionToken());
-    nlohmann::json payload;
-    payload["title"] = input->getBook().title;
-    payload["author"] = input->getBook().author;
-    payload["genre"] = input->getBook().genre;
-    payload["page_count"] = input->getBook().page_count;
-    payload["publisher"] = input->getBook().publisher;
-    parser->setPayload(payload);
+    parser->setPayload(nlohmann::json::parse(R"(
+        {
+            "title": ")" + input->getBook().title + R"(",
+            "author": ")" + input->getBook().author + R"(",
+            "genre": ")" + input->getBook().genre + R"(",
+            "page_count": )" + std::to_string(input->getBook().page_count) + R"(,
+            "publisher": ")" + input->getBook().publisher + R"(",
+        }
+    )"));
 
     #ifdef DEBUG
     {PRINT("AddBookCommand::executed");}
-    {PRINT(parser->toString()->c_str());}
     #endif
 
     utils::send(Session::session->getSocketFd(), parser->toString());
