@@ -5,6 +5,9 @@
 #include <memory>
 #include "utils.hpp"
 
+/*
+* This struct is used for storing book data.
+*/
 struct Book {
     std::string title;
     std::string author;

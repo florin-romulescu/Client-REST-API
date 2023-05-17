@@ -17,26 +17,35 @@
 
 using json = nlohmann::json;
 
+/*
+*  This is the main function of the program
+*  It will connect to the server and start the main loop
+*  The main loop will wait for user input, store it in a buffer
+*  and send it to the server when the server is up.
+*  The main loop will also wait for server response and respond to it
+*  accordingly.
+*  @return 0 if the program exits successfully
+*/
 int main() {
     #ifdef DEBUG
     std::ofstream fout("log.txt");
     fout << std::endl;
     fout.close();
     #endif
-
+    // Connect to server
     int sockdfd = utils::connect(SERVER_IP, SERVER_PORT, AF_INET, SOCK_STREAM, 0);
 
     std::vector<pollfd> pollfds;
     #ifdef DEBUG
     std::cout << "Connected to server" << std::endl;
     #endif
-
+    // Add stdin and socket to pollfd
     pollfds.push_back({
         .fd = 0,
         .events = 0x0001,
         .revents = 0
     });
-
+    // Add socket to pollfd
     pollfds.push_back({
         .fd = sockdfd,
         .events = 0x0001,
@@ -47,11 +56,11 @@ int main() {
 
     Session* session = Session::start();
     session->setSocketFd(sockdfd);
-
-    #define TIMEOUT 4000
+    // This variable is used for prompt printing
     bool command_running = true;
 
     do {
+        // Print prompt
         if (command_running) {
             std::cout << "[";
             if (Session::session->getLastCommandSuccess()) {

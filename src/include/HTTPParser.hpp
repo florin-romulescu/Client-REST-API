@@ -11,21 +11,12 @@ namespace http {
 
     using json = nlohmann::json;
 
-    enum OUTPUT_TYPE {
-        ERROR,
-        BOOK,
-        BOOKS,
-        JWT,
-        COOKIE
-    };
-
-    class HTTPOutput {
-        private:
-            OUTPUT_TYPE type;
-        public:
-            virtual void display() = 0;
-    };
-
+    /*
+    * This class is used for parsing HTTP requests
+    * It will parse the request and store the data in the class fields
+    * The class fields can be accessed using the getters
+    * The class fields can be set using the setters
+    */
     class HTTPParser {
         private:
             std::string method;
@@ -52,7 +43,16 @@ namespace http {
             std::string getCookie();
             std::string getSessionToken();
             std::string getQueryParams();
+            /*
+            * This method will return a proper http request string
+            * that can be sent to the server.
+            * @return std::shared_ptr<std::string> - the http request string
+            */
             std::shared_ptr<std::string> toString();
+            /*
+            * This method will append \r\n to the end of the string.
+            * @param str - the string to append to
+            */
             static void append_newline(std::shared_ptr<std::string> str);
     };
 

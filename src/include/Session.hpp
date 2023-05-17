@@ -24,6 +24,7 @@ class Session {
         bool lastCommandSuccess;
         Session();
     public:
+        // Buffer for storing requests
         std::shared_ptr<std::queue<std::shared_ptr<std::string>>> requests;
         ~Session();
         static Session* session;

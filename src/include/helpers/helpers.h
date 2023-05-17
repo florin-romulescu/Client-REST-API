@@ -1,3 +1,7 @@
+/*
+* This file is part of lab10.
+*/
+
 #ifndef _HELPERS_
 #define _HELPERS_
 

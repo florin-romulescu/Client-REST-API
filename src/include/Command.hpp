@@ -7,6 +7,11 @@
 #include "HTTPParser.hpp"
 #include "utils.hpp"
 
+/*
+* Abstract class for all client commands.
+* Each command has an execute method that takes an input and a respond method
+* for interacting with the server.
+*/
 class Command {
     public:
     virtual void execute(std::shared_ptr<Input> input) = 0;
@@ -14,6 +19,12 @@ class Command {
     virtual ~Command() = default;
     std::shared_ptr<http::HTTPParser> parser;
 };
+
+// ------------------ Commands ------------------
+/*
+* All the below classes are implementations of the Command class.
+* They will have additional fields for storing the data that is needed.
+*/
 
 class LoginCommand : public Command {
     private:
@@ -95,8 +106,21 @@ class InvalidCommand : public Command {
     void respond(std::string response) override;
 };
 
+// ------------------ Command Factory ------------------
+/*
+* The CommandFactory class is used to build commands.
+* It has a build method that takes a COMMAND_TYPE and returns a pointer to a
+* Command object.
+* It uses the Factory design pattern.
+*/
 class CommandFactory {
     public:
+    /*
+    * The build method takes a COMMAND_TYPE and returns a pointer to a Command
+    * object.
+    * @param COMMAND_TYPE type - the type of the command to be built
+    * @return Command* - pointer to a Command object
+    */
     Command* build(COMMAND_TYPE type) {
         switch (type) {
             case COMMAND_TYPE::LOGIN:
