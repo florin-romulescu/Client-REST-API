@@ -1,5 +1,5 @@
 .vscode/*
 obj/*
-log/*
+log.txt
 main
 *.pdf
