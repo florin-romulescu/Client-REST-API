@@ -1,4 +1,5 @@
 #include "../../include/Command.hpp"
+#include "../../include/Session.hpp"
 
 void HelpCommand::execute(std::shared_ptr<Input> input) {
     input=nullptr;
@@ -17,4 +18,5 @@ void HelpCommand::execute(std::shared_ptr<Input> input) {
 
 void HelpCommand::respond(std::string response) {
     (void) response;
+    Session::session->setLastCommandSuccess(true);
 }

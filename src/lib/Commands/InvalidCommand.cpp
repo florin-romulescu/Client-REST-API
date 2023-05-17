@@ -1,4 +1,5 @@
 #include "../../include/Command.hpp"
+#include "../../include/Session.hpp"
 
 void InvalidCommand::execute(std::shared_ptr<Input> input) {
     input=nullptr;
@@ -7,4 +8,5 @@ void InvalidCommand::execute(std::shared_ptr<Input> input) {
 
 void InvalidCommand::respond(std::string response) {
     (void) response;
+    Session::session->setLastCommandSuccess(true);
 }

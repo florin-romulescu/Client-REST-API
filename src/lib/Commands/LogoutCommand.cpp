@@ -13,8 +13,8 @@ void LogoutCommand::execute(std::shared_ptr<Input> input) {
     PRINT("LogoutCommand::executed");
     #endif
 
-    utils::send(Session::session->getSocketFd(), parser->toString());
-}
+    // utils::send(Session::session->getSocketFd(), parser->toString());
+    Session::session->requests->push(parser->toString());}
 
 void LogoutCommand::respond(std::string response) {
     int statusCode = utils::getErrorCode(response);
@@ -23,11 +23,13 @@ void LogoutCommand::respond(std::string response) {
         Session::session->setUsername("");
         Session::session->setPassword("");
         Session::session->setSessionToken("");
+        Session::session->setLastCommandSuccess(true);
     } else {
         std::string body = utils::getBody(response);
         nlohmann::json jsonBody = nlohmann::json::parse(body);
         std::string message = jsonBody["error"];
         std::cerr << message << std::endl;
+        Session::session->setLastCommandSuccess(false);
     }
 
     #ifdef DEBUG

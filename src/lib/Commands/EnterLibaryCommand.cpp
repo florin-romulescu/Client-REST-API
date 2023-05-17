@@ -12,8 +12,8 @@ void EnterLibraryCommand::execute(std::shared_ptr<Input> input) {
     {PRINT("EnterLibraryCommand::executed");}
     {PRINT(parser->toString()->c_str());}
     #endif
-    utils::send(Session::session->getSocketFd(), parser->toString());
-}
+    // utils::send(Session::session->getSocketFd(), parser->toString());
+    Session::session->requests->push(parser->toString());}
 
 void EnterLibraryCommand::respond(std::string response) {
     int statusCode = utils::getErrorCode(response);
@@ -25,11 +25,13 @@ void EnterLibraryCommand::respond(std::string response) {
         #ifdef DEBUG
         {std::cout << "EnterLibraryCommand::respond: " << jwt << std::endl;}
         #endif
+        Session::session->setLastCommandSuccess(true);
     } else {
         std::string body = utils::getBody(response);
         nlohmann::json jsonBody = nlohmann::json::parse(body);
         std::string message = jsonBody["error"];
         std::cerr << message << std::endl;
+        Session::session->setLastCommandSuccess(false);
     }
 
     #ifdef DEBUG

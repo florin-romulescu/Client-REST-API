@@ -3,6 +3,7 @@
 
 #include <string>
 #include <memory>
+#include <queue>
 
 /*
 * Session class
@@ -20,8 +21,10 @@ class Session {
         std::string username;
         std::string password;
         int sockdfd;
+        bool lastCommandSuccess;
         Session();
     public:
+        std::shared_ptr<std::queue<std::shared_ptr<std::string>>> requests;
         ~Session();
         static Session* session;
         static Session* start();
@@ -35,7 +38,9 @@ class Session {
         void setPassword(std::string password);
         void setCookie(std::string cookie);
         void setSocketFd(int sockdfd);
+        void setLastCommandSuccess(bool success);
         int getSocketFd();
+        bool getLastCommandSuccess();
 };
 
 #endif // SESSION_HPP

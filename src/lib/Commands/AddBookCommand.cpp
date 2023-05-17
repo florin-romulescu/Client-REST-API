@@ -8,34 +8,38 @@ void AddBookCommand::execute(std::shared_ptr<Input> input) {
     parser->setPayloadType("application/json");
     parser->setCookie(Session::session->getCookie());
     parser->setSessionToken(Session::session->getSessionToken());
-    parser->setPayload(nlohmann::json::parse(R"(
-        {
-            "title": ")" + input->getBook().title + R"(",
-            "author": ")" + input->getBook().author + R"(",
-            "genre": ")" + input->getBook().genre + R"(",
-            "page_count": )" + std::to_string(input->getBook().page_count) + R"(,
-            "publisher": ")" + input->getBook().publisher + R"(",
-        }
-    )"));
-
+    nlohmann::json payload;
+    payload["title"] = input->getBook().title;
+    payload["author"] = input->getBook().author;
+    payload["genre"] = input->getBook().genre;
+    payload["publisher"] = input->getBook().publisher;
+    payload["page_count"] = input->getBook().page_count;
+    parser->setPayload(payload);
+    std::cout << parser->getPayload().dump(4) << std::endl;
     #ifdef DEBUG
     {PRINT("AddBookCommand::executed");}
+    {PRINT(parser->toString()->c_str());}
     #endif
 
-    utils::send(Session::session->getSocketFd(), parser->toString());
+    // utils::send(Session::session->getSocketFd(), parser->toString());
+    Session::session->requests->push(parser->toString());
 }
 
 void AddBookCommand::respond(std::string response) {
     int statusCode = utils::getErrorCode(response);
-    if (statusCode == 201) {
+    if (statusCode == 200) {
+        // Nothing to do here
+    } else if (statusCode == 201) {
         std::string body = utils::getBody(response);
         nlohmann::json jsonBody = nlohmann::json::parse(body);
         std::cout << jsonBody.dump(4) << std::endl;
+        Session::session->setLastCommandSuccess(true);
     } else {
         std::string body = utils::getBody(response);
         nlohmann::json jsonBody = nlohmann::json::parse(body);
         std::string message = jsonBody["error"];
         std::cerr << message << std::endl;
+        Session::session->setLastCommandSuccess(false);
     }
 
     #ifdef DEBUG

@@ -24,11 +24,6 @@ int main() {
     fout.close();
     #endif
 
-    // sockaddr_in server;
-    // server.sin_family = AF_INET;
-    // server.sin_port = htons(SERVER_PORT);
-    // server.sin_addr.s_addr = inet_addr(SERVER_IP);
-
     int sockdfd = utils::connect(SERVER_IP, SERVER_PORT, AF_INET, SOCK_STREAM, 0);
 
     std::vector<pollfd> pollfds;
@@ -53,12 +48,28 @@ int main() {
     Session* session = Session::start();
     session->setSocketFd(sockdfd);
 
+    #define TIMEOUT 4000
+    bool command_running = true;
+
     do {
+        if (command_running) {
+            std::cout << "[";
+            if (Session::session->getLastCommandSuccess()) {
+                std::cout << "\033[1;32m";
+                std::cout << "OK";
+            } else {
+                std::cout << "\033[1;31m";
+                std::cout << "FAIL";
+            }
+            std::cout << "\033[0m" << "]> ";
+            std::cout.flush();
+        }
         poll(pollfds.data(), pollfds.size(), -1);
         for (int i = 0; i < (int)pollfds.size(); i++) {
             if (pollfds[i].revents & POLLIN) {
                 if (pollfds[i].fd == 0) {
                     mode = Input::mainLoop();
+                    command_running = false;
                 } else {
                     std::string response = utils::receive(sockdfd);
                     if (response == "") {
@@ -72,14 +83,21 @@ int main() {
                         #ifdef DEBUG
                         std::cout << "Reconnected to server" << std::endl;
                         #endif
+                        command_running = false;
                         continue;
                     }
                     CommandFactory cmdFactory;
                     Command* cmd = cmdFactory.build(mode);
                     cmd->respond(response);
                     delete cmd;
+                    command_running = true;
                 }
             }
+        }
+        while (!Session::session->requests->empty()) {
+            std::shared_ptr<std::string> request = Session::session->requests->front();
+            Session::session->requests->pop();
+            utils::send(sockdfd, request);
         }
     } while (mode != COMMAND_TYPE::EXIT);
 

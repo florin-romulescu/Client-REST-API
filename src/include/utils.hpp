@@ -16,7 +16,7 @@
 #define SERVER_IP "34.254.242.81"
 #define SERVER_PORT 8080
 
-#define DEBUG
+// #define DEBUG
 
 #define PRINT(message) \
 std::ofstream fout("log.txt", std::ios_base::app); \

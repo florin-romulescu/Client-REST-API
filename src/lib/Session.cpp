@@ -6,6 +6,8 @@ Session::Session() {
     this->sessionToken = "";
     this->username = "";
     this->password = "";
+    this->lastCommandSuccess = true;
+    this->requests = std::make_shared<std::queue<std::shared_ptr<std::string>>>();
 }
 
 Session::~Session() {}
@@ -62,6 +64,14 @@ void Session::setSocketFd(int sockdfd) {
 
 int Session::getSocketFd() {
     return this->sockdfd;
+}
+
+void Session::setLastCommandSuccess(bool success) {
+    this->lastCommandSuccess = success;
+}
+
+bool Session::getLastCommandSuccess() {
+    return this->lastCommandSuccess;
 }
 
 // Path: src/lib/CommandFactory.cpp
