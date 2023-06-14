@@ -3,7 +3,7 @@ SOURCE	= src/main.cpp src/lib/utils.cpp src/lib/Session.cpp src/lib/Input.cpp sr
 HEADER	= src/include/utils.hpp src/include/Session.hpp src/include/json.hpp src/include/input.hpp src/include/HTTPParser.hpp src/include/Command.hpp src/include/helpers/buffer.h src/include/helpers/helpers.h
 OUT	= main
 CC	 = g++
-FLAGS	 = -g -c -Wall
+FLAGS	 = -g -c -Wall -Wextra
 LFLAGS	 = 
 
 all: obj $(OBJS)

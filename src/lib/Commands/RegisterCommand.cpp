@@ -18,26 +18,27 @@ void RegisterCommand::execute(std::shared_ptr<Input> input) {
     {PRINT("RegisterCommand::executed");}
     {PRINT(parser->toString()->c_str());}
     #endif
-    // utils::send(Session::session->getSocketFd(), parser->toString());
+
     Session::session->requests->push(parser->toString());}
 
 void RegisterCommand::respond(std::string response) {
-    std::cout << "TEST" << std::endl;
     #ifdef DEBUG
     {PRINT("RegisterCommand::response");}
     {PRINT(response.c_str());}
     #endif
     int statusCode = utils::getErrorCode(response);
-    if (statusCode == 200) {
+    if (statusCode == 201) {
         Session::session->setLastCommandSuccess(true);
         return;
-    } else {
+    } else if (statusCode == 400) {
         std::string body = utils::getBody(response);
         nlohmann::json jsonBody = nlohmann::json::parse(body);
         std::string message = jsonBody["error"];
         std::cerr << message << std::endl;
         Session::session->setLastCommandSuccess(false);
+        return;
     }
+    Session::session->setLastCommandSuccess(false);
 }
 
 std::string RegisterCommand::getUsername() {

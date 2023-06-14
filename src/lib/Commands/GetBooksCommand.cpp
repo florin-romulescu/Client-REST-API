@@ -13,7 +13,6 @@ void GetBooksCommand::execute(std::shared_ptr<Input> input) {
     {PRINT(parser->toString()->c_str());}
     #endif
 
-    // utils::send(Session::session->getSocketFd(), parser->toString());
     Session::session->requests->push(parser->toString());}
 
 void GetBooksCommand::respond(std::string response) {

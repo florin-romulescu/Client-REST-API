@@ -15,13 +15,12 @@ void AddBookCommand::execute(std::shared_ptr<Input> input) {
     payload["publisher"] = input->getBook().publisher;
     payload["page_count"] = input->getBook().page_count;
     parser->setPayload(payload);
-    std::cout << parser->getPayload().dump(4) << std::endl;
+
     #ifdef DEBUG
     {PRINT("AddBookCommand::executed");}
     {PRINT(parser->toString()->c_str());}
     #endif
 
-    // utils::send(Session::session->getSocketFd(), parser->toString());
     Session::session->requests->push(parser->toString());
 }
 

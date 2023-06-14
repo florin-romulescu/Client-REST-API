@@ -105,7 +105,11 @@ int main() {
             if (pollfds[i].revents & POLLIN) {
                 if (pollfds[i].fd == 0) {
                     mode = Input::mainLoop();
-                    command_running = false;
+                    if (mode == COMMAND_TYPE::HELP || mode == COMMAND_TYPE::INVALID) {
+                        command_running = true;
+                    } else {
+                        command_running = false;
+                    }
                 } else {
                     std::string response = utils::receive(sockdfd);
                     if (response == "") {

@@ -14,9 +14,9 @@ void HelpCommand::execute(std::shared_ptr<Input> input) {
     std::cout << "8.logout" << std::endl;
     std::cout << "9.help" << std::endl;
     std::cout << "10.exit" << std::endl;
+    Session::session->setLastCommandSuccess(true);
 }
 
 void HelpCommand::respond(std::string response) {
     (void) response;
-    Session::session->setLastCommandSuccess(true);
 }

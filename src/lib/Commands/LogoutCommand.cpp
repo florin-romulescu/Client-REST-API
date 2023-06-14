@@ -13,7 +13,6 @@ void LogoutCommand::execute(std::shared_ptr<Input> input) {
     PRINT("LogoutCommand::executed");
     #endif
 
-    // utils::send(Session::session->getSocketFd(), parser->toString());
     Session::session->requests->push(parser->toString());}
 
 void LogoutCommand::respond(std::string response) {
