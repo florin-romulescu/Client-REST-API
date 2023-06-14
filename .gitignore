@@ -3,3 +3,6 @@ obj/*
 log.txt
 main
 *.pdf
+input.txt
+*.zip
+
